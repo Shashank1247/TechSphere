@@ -32,7 +32,7 @@ const ProfilePage = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDevicesWidgetClick = () => {
-    navigate('/product'); // Replace '/your-desired-route' with the actual route you want to navigate to
+    navigate(`/product/${userId}`); // Replace '/your-desired-route' with the actual route you want to navigate to
   };
 
   if (!user) return null;

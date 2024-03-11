@@ -35,7 +35,7 @@ function App() {
               element={isAuth ? <UploadPage /> : <Navigate to="/" />}
             />
              <Route
-              path="/product"
+              path="/product/:productId"
               element={isAuth ? <ProductPage /> : <Navigate to="/" />}
             />
           </Routes>

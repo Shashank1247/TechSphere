@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state";
 import { setUploads } from "state";
-import PostWidget from "./PostWidget";
-import DeviceWidget from "./DeviceWidget"
+import DeviceWidget from "./DeviceWidget";
 
 const DevicesWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
@@ -25,38 +23,23 @@ const DevicesWidget = ({ userId, isProfile = false }) => {
   useEffect(() => {
     if (isProfile) {
       getUserUploads();
-    } 
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }
+  }, [userId, isProfile, dispatch, token]); // Added dependencies
 
   return (
     <>
-      {uploads.map(
-        ({
-        
-          picturePath,
-      
-        }) => (
-          /*
-          <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
-          />
-          */
+      {uploads.map((upload) => (
          <DeviceWidget
-          
-          picturePath = {picturePath}
-
-         />
-        )
-      )}
+          key={upload._id}
+          productId={upload._id} // Pass the product ID to the DeviceWidget
+          picturePath={upload.picturePath}
+          productName={upload.productName}
+          productPrice={upload.productPrice}
+          productRating={upload.productRating}
+          productReview={upload.productReview}
+          purchaseDate={upload.purchaseDate}
+        />
+      ))}
     </>
   );
 };

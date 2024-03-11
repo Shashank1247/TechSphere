@@ -53,7 +53,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           likes,
           comments,
         }) => (
-          /*
+          
           <PostWidget
             key={_id}
             postId={_id}
@@ -66,12 +66,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             likes={likes}
             comments={comments}
           />
-          */
-         <DeviceWidget
-          
-          picturePath = {picturePath}
-
-         />
+       
+        
         )
       )}
     </>
