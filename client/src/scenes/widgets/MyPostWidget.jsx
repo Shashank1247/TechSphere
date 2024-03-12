@@ -163,7 +163,10 @@ const MyPostWidget = ({ picturePath }) => {
             borderRadius: "3rem",
           }}
         >
+          <Typography>
           POST
+          </Typography>
+          
         </Button>
       </FlexBetween>
     </WidgetWrapper>

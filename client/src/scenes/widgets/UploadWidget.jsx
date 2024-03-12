@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   TextField,
-  useMediaQuery,
+  Container,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -16,219 +16,176 @@ import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
-
-const initialValuesUpload = {
-  userId:"",
-  picture: "",
-  productName: "",
-  productPrice: "",
-  productRating: "",
-  purchaseDate: "",
-  productReview: ""
-};
-
 const UploadWidget = () => {
   const { _id } = useSelector((state) => state.user);
-  console.log(_id);
-  const [pageType, setPageType] = useState("login");
   const { palette } = useTheme();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const dispatch = useDispatch();
 
-  const upload = async(values, onSubmitProps) => {
-    //console.log(values);
+  const initialValuesUpload = {
+    userId: _id,
+    picture: "",
+    productName: "",
+    productPrice: "",
+    productRating: "",
+    purchaseDate: "",
+    productReview: "",
+  };
+
+  const upload = async (values, onSubmitProps) => {
     const formData = new FormData();
 
-    for(let value in values) {
-      //console.log(value);
+    for (let value in values) {
       formData.append(value, values[value]);
     }
 
     formData.append("picturePath", values.picture.name);
-    formData.append("userId", _id);
 
+    const response = await fetch("http://localhost:3001/auth/upload", {
+      method: "POST",
+      body: formData,
+    });
 
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-    
-
-    const savedUserResponse = await fetch("http://localhost:3001/auth/upload", { method: "POST", body: formData })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
-
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
-
-    if (savedUser) {
-      setPageType("login");
+    if (response.ok) {
+      onSubmitProps.resetForm();
+      navigate(`/profile/${_id}`);
+    } else {
+      // Handle server errors or invalid responses
+      console.error('Upload failed:', await response.text());
     }
   };
 
   const handleFormSubmit = async (values, onSubmitProps) => {
-      //console.log(values);
-      await upload(values,onSubmitProps);
+    await upload(values, onSubmitProps);
   };
 
   return (
-    <Formik
-    onSubmit={handleFormSubmit}
-    initialValues={initialValuesUpload}
-    
-  >
-    {({
-      values,
-      errors,
-      touched,
-      handleBlur,
-      handleChange,
-      handleSubmit,
-      setFieldValue,
-      resetForm,
-    }) => (
-      <form onSubmit={handleSubmit}>
-        <Box
-          display="grid"
-          gap="30px"
-          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-          sx={{
-            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-          }}
-        >
-          {  (
-            <>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Box
+        sx={{
+          p: 2,
+          bgcolor: palette.background.paper,
+          borderRadius: '8px',
+          boxShadow: '0px 0px 12px rgba(0,0,0,0.1)',
+        }}
+      >
+        <Formik initialValues={initialValuesUpload} onSubmit={handleFormSubmit}>
+          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue }) => (
+            <form onSubmit={handleSubmit}>
+              {/* Product Name */}
               <TextField
+                fullWidth
                 label="Product Name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.productName}
                 name="productName"
-                error={
-                  Boolean(touched.productName) && Boolean(errors.productName)
-                }
+                value={values.productName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.productName && Boolean(errors.productName)}
                 helperText={touched.productName && errors.productName}
-                sx={{ gridColumn: "span 2" }}
+                margin="normal"
               />
+
+              {/* Product Price */}
               <TextField
+                fullWidth
                 label="Product Price"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.productPrice}
                 name="productPrice"
-                error={Boolean(touched.productPrice) && Boolean(errors.productPrice)}
-                helperText={touched.productPrice && errors.productPrice}
-                sx={{ gridColumn: "span 2" }}
-              />
-              <TextField
-                label="Rating"
-                onBlur={handleBlur}productRating
+                value={values.productPrice}
                 onChange={handleChange}
-                value={values.productRating}
-                name="productRating"
-                error={Boolean(touched.productRating) && Boolean(errors.productRating)}
-                helperText={touched.productRating && errors.productRating}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                label="Purchase Date"
                 onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.purchaseDate}
-                name="purchaseDate"
-                error={
-                  Boolean(touched.purchaseDate) && Boolean(errors.purchaseDate)
-                }
-                helperText={touched.purchaseDate && errors.purchaseDate}
-                sx={{ gridColumn: "span 4" }}
+                error={touched.productPrice && Boolean(errors.productPrice)}
+                helperText={touched.productPrice && errors.productPrice}
+                margin="normal"
               />
-              <Box
-                gridColumn="span 4"
-                border={`1px solid ${palette.neutral.medium}`}
-                borderRadius="5px"
-                p="1rem"
+
+              {/* Product Rating */}
+              <TextField
+                fullWidth
+                label="Rating"
+                name="productRating"
+                value={values.productRating}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.productRating && Boolean(errors.productRating)}
+                helperText={touched.productRating && errors.productRating}
+                margin="normal"
+              />
+
+              {/* Purchase Date */}
+              <TextField
+                fullWidth
+                label="Purchase Date"
+                name="purchaseDate"
+                type="date"
+                value={values.purchaseDate}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.purchaseDate && Boolean(errors.purchaseDate)}
+                helperText={touched.purchaseDate && errors.purchaseDate}
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+
+              {/* Product Review */}
+              <TextField
+                fullWidth
+                label="Review"
+                name="productReview"
+                multiline
+                minRows={3}
+                value={values.productReview}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.productReview && Boolean(errors.productReview)}
+                helperText={touched.productReview && errors.productReview}
+                margin="normal"
+              />
+
+              {/* Image Upload */}
+              <Dropzone
+                onDrop={(acceptedFiles) => setFieldValue("picture", acceptedFiles[0])}
               >
-                <Dropzone
-                  acceptedFiles=".jpg,.jpeg,.png"
-                  multiple={false}
-                  onDrop={(acceptedFiles) =>
-                    setFieldValue("picture", acceptedFiles[0])
-                  }
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <Box
-                      {...getRootProps()}
-                      border={`2px dashed ${palette.primary.main}`}
-                      p="1rem"
-                      sx={{ "&:hover": { cursor: "pointer" } }}
-                    >
-                      <input {...getInputProps()} />
-                      {!values.picture ? (
-                        <p>Add Picture Here</p>
-                      ) : (
-                        <FlexBetween>
-                          <Typography>{values.picture.name}</Typography>
-                          <EditOutlinedIcon />
-                        </FlexBetween>
-                      )}
-                    </Box>
-                  )}
-                </Dropzone>
-              </Box>
-            </>
+                {({ getRootProps, getInputProps }) => (
+                  <Box
+                    {...getRootProps()}
+                    sx={{
+                      mt: 2,
+                      mb: 2,
+                      p: 2,
+                      border: '1px dashed',
+                      borderColor: palette.primary.main,
+                      bgcolor: palette.background.default,
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <input {...getInputProps()} />
+                    {!values.picture ? (
+                      <Typography>Add Picture Here</Typography>
+                    ) : (
+                      <Typography>{values.picture.name}</Typography>
+                    )}
+                  </Box>
+                )}
+              </Dropzone>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Submit
+              </Button>
+            </form>
           )}
-
-          <TextField
-            label="Review"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.productReview}
-            name="productReview"
-            error={Boolean(touched.productReview) && Boolean(errors.productReview)}
-            helperText={touched.productReview && errors.productReview}
-            sx={{ gridColumn: "span 4" }}
-          />
-          
-        </Box>
-
-        {/* BUTTONS */}
-        <Box>
-          <Button
-            fullWidth
-            type="submit"
-            sx={{
-              m: "2rem 0",
-              p: "1rem",
-              backgroundColor: palette.primary.main,
-              color: palette.background.alt,
-              "&:hover": { color: palette.primary.main },
-            }}
-          >
-         
-          </Button>
-          <Typography
-            onClick={() => {
-             
-              resetForm();
-            }}
-            sx={{
-              textDecoration: "underline",
-              color: palette.primary.main,
-              "&:hover": {
-                cursor: "pointer",
-                color: palette.primary.light,
-              },
-            }}
-          >
-            
-          </Typography>
-        </Box>
-      </form>
-    )}
-  </Formik>
-  )
-
+        </Formik>
+      </Box>
+    </Container>
+  );
 };
 
 export default UploadWidget;

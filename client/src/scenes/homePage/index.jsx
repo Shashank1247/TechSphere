@@ -27,14 +27,22 @@ const HomePage = () => {
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
+          sx={{
+            height: '100vh', // Set the height to full viewport height
+            overflowY: 'auto', // Enable vertical scrolling
+            '&::-webkit-scrollbar': { display: 'none' }, // Hide scrollbar for Webkit browsers
+            scrollbarWidth: 'none', // Hide scrollbar for Firefox
+            '-ms-overflow-style': 'none'  // Hide scrollbar for IE and Edge
+          }}
+
         >
           <MyPostWidget picturePath={picturePath} />
           <PostsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">
-            <AdvertWidget />
-            <Box m="2rem 0" />
+           
+            <Box />
             <FriendListWidget userId={_id} />
           </Box>
         )}

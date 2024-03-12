@@ -31,9 +31,7 @@ const ProfilePage = () => {
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleDevicesWidgetClick = () => {
-    navigate(`/product/${userId}`); // Replace '/your-desired-route' with the actual route you want to navigate to
-  };
+
 
   if (!user) return null;
 
@@ -55,8 +53,16 @@ const ProfilePage = () => {
         <Box
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
-          onClick={handleDevicesWidgetClick}
-          sx={{ cursor: 'pointer' }} // Apply styles directly to make the cursor a pointer
+          //onClick={handleDevicesWidgetClick}
+          sx={{
+            cursor: "pointer",
+            height: '100vh', // Set the height to full viewport height
+            overflowY: 'auto', // Enable vertical scrolling
+            '&::-webkit-scrollbar': { display: 'none' }, // Hide scrollbar for Webkit browsers
+            scrollbarWidth: 'none', // Hide scrollbar for Firefox
+            '-ms-overflow-style': 'none'  // Hide scrollbar for IE and Edge
+          }}
+ // Apply styles directly to make the cursor a pointer
         >
         
           <DevicesWidget userId={userId} isProfile />

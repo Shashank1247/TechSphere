@@ -1,25 +1,25 @@
-import {
-  ManageAccountsOutlined,
-  EditOutlined,
-  LocationOnOutlined,
-  WorkOutlineOutlined,
-} from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import { ManageAccountsOutlined, LocationOnOutlined, WorkOutlineOutlined } from "@mui/icons-material";
+import { Box, Typography, Divider, useTheme, Button } from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
-  const { palette } = useTheme();
+  const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const token = useSelector((state) => state.token);
-  const dark = palette.neutral.dark;
-  const medium = palette.neutral.medium;
-  const main = palette.neutral.main;
+
+  const uploadRoute = `/upload/${userId}`;
+  const deviceListRoute = `/profile/${userId}`;
+  const homeRoute = "/home";
+  const isHomePage = location.pathname === homeRoute;
+  const isUploadPage = location.pathname === uploadRoute;
+  const isDeviceListPage = location.pathname === deviceListRoute;
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
@@ -32,50 +32,29 @@ const UserWidget = ({ userId, picturePath }) => {
 
   useEffect(() => {
     getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId, token]);
 
   if (!user) {
     return null;
   }
 
-  const {
-    firstName,
-    lastName,
-    location,
-    occupation,
-    viewedProfile,
-    impressions,
-    friends,
-  } = user;
+  // Ensure that you're extracting the 'friends' data here
+  const { firstName, lastName, location: userLocation, occupation, friends = [] } = user; // Default to an empty array if 'friends' is undefined
 
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
-      <FlexBetween
-        gap="0.5rem"
-        pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
-      >
+      <FlexBetween gap="0.5rem" pb="1.1rem" onClick={() => navigate(`/profile/${userId}`)}>
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} />
           <Box>
-            <Typography
-              variant="h4"
-              color={dark}
-              fontWeight="500"
-              sx={{
-                "&:hover": {
-                  color: palette.primary.light,
-                  cursor: "pointer",
-                },
-              }}
-            >
+            <Typography variant="h4" color={theme.palette.text.primary} fontWeight="500" sx={{ "&:hover": { cursor: "pointer", color: theme.palette.primary.light } }}>
               {firstName} {lastName}
             </Typography>
-            <Typography color={medium}>{friends.length} friends</Typography>
+            <Typography color={theme.palette.text.secondary}>{friends.length} friends</Typography>
           </Box>
         </FlexBetween>
-        <ManageAccountsOutlined />
+        <ManageAccountsOutlined color="action" />
       </FlexBetween>
 
       <Divider />
@@ -83,12 +62,12 @@ const UserWidget = ({ userId, picturePath }) => {
       {/* SECOND ROW */}
       <Box p="1rem 0">
         <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
-          <LocationOnOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium}>{location}</Typography>
+          <LocationOnOutlined color="action" />
+          <Typography color={theme.palette.text.secondary}>{userLocation}</Typography>
         </Box>
         <Box display="flex" alignItems="center" gap="1rem">
-          <WorkOutlineOutlined fontSize="large" sx={{ color: main }} />
-          <Typography color={medium}>{occupation}</Typography>
+          <WorkOutlineOutlined color="action" />
+          <Typography color={theme.palette.text.secondary}>{occupation}</Typography>
         </Box>
       </Box>
 
@@ -96,80 +75,57 @@ const UserWidget = ({ userId, picturePath }) => {
 
       {/* THIRD ROW */}
       <Box p="1rem 0">
-        <FlexBetween mb="0.5rem">
-          <Typography color={medium}>Who's viewed your profile</Typography>
-          <Typography color={main} fontWeight="500">
-            {viewedProfile}
-          </Typography>
-        </FlexBetween>
+        
         <FlexBetween>
-          <Typography color={medium}>Impressions of your post</Typography>
-          <Typography color={main} fontWeight="500">
-            {impressions}
-          </Typography>
+         
+          <Typography variant="h5" color={theme.palette.text.primary} fontWeight="500" sx={{ "&:hover": { cursor: "pointer", color: theme.palette.primary.light } }}>
+              Level : 15
+            </Typography>
+            
         </FlexBetween>
       </Box>
+
+      
+      
+      {/* FOURTH ROW */}
+      
 
       <Divider />
-      
 
-      {/* FOURTH ROW */}
+      {/* Home Text/Button */}
       <Box p="1rem 0">
-        <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
-          Social Profiles
-        </Typography>
-
-            
-        <FlexBetween gap="1rem" mb="0.5rem">
-          <FlexBetween gap="1rem">
-            <img src="../assets/twitter.png" alt="twitter" />
-            <Box>
-              <Typography color={main} fontWeight="500">
-                Twitter
-              </Typography>
-              <Typography color={medium}>Social Network</Typography>
-            </Box>
-          </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
-        </FlexBetween>
-
-        <FlexBetween gap="1rem">
-          <FlexBetween gap="1rem">
-            <img src="../assets/linkedin.png" alt="linkedin" />
-            <Box>
-              <Typography color={main} fontWeight="500">
-                Linkedin
-              </Typography>
-              <Typography color={medium}>Network Platform</Typography>
-            </Box>
-          </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
-        </FlexBetween>
+        {isHomePage ? (
+          <Button variant="contained" fullWidth onClick={() => navigate(homeRoute)} sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}>
+            <Typography variant="h6" fontWeight="500">HOME</Typography>
+          </Button>
+        ) : (
+          <Typography variant="h4" onClick={() => navigate(homeRoute)} sx={{ cursor: 'pointer', color: theme.palette.text.primary }}>&gt; Home</Typography>
+        )}
       </Box>
-         
+      <Divider />
 
-  
-            <Divider />
-            <Box p="1rem 0">
-  {/* Existing content */}
+      {/* Upload Device Text/Button */}
+      <Box p="1rem 0">
+        {isUploadPage ? (
+          <Button variant="contained" fullWidth onClick={() => navigate(uploadRoute)} sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}>
+            <Typography variant="h6" fontWeight="500">Upload Device</Typography>
+          </Button>
+        ) : (
+          <Typography variant="h4" onClick={() => navigate(uploadRoute)} sx={{ cursor: 'pointer', color: theme.palette.text.primary }}>&gt; Upload Device</Typography>
+        )}
+      </Box>
+      <Divider />
 
-
-
-  <FlexBetween
-    gap="0.5rem"
-    pb="1.1rem"
-    onClick={() => navigate(`/upload/${userId}`)}
-    sx={{
-      cursor: 'pointer',
-      //color: isUploadPage ? palette.primary.main : medium, // Highlight color when on /upload page
-      //fontWeight: isUploadPage ? '500' : '400', // Adjust font weight if on /upload page
-      
-    }}
-  >
-    <Typography>Upload</Typography>
-  </FlexBetween>
-</Box>
-
+      {/* Device List Text/Button */}
+      <Box p="1rem 0">
+        {isDeviceListPage ? (
+          <Button variant="contained" fullWidth onClick={() => navigate(deviceListRoute)} sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}>
+            <Typography variant="h6" fontWeight="500">Device List</Typography>
+          </Button>
+        ) : (
+          <Typography variant="h4" onClick={() => navigate(deviceListRoute)} sx={{ cursor: 'pointer', color: theme.palette.text.primary }}>&gt; Device List</Typography>
+        )}
+      </Box>
 
     </WidgetWrapper>
   );

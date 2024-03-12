@@ -29,22 +29,26 @@ export const createPost = async (req, res) => {
 /* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    const post = await Post.find();
-    res.status(200).json(post);
+    // Fetch all posts and sort them by `createdAt` in descending order
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
+
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const post = await Post.find({ userId });
-    res.status(200).json(post);
+    // Fetch posts by a specific user and sort them by `createdAt` in descending order
+    const posts = await Post.find({ userId }).sort({ createdAt: -1 });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
+
 
 /* UPDATE */
 export const likePost = async (req, res) => {
