@@ -61,3 +61,31 @@ export const addRemoveFriend = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const getSuggestedFriends = async (req, res) => {
+  try {
+    const { id } = req.params; // Assuming 'id' is the current user's ID
+    const currentUser = await User.findById(id);
+
+    // Get all users excluding the current user and their friends
+    const allUsers = await User.find({
+      _id: { $ne: id },
+      _id: { $nin: currentUser.friends },
+    });
+
+    // Optionally, format the users for the response
+    const suggestedFriends = allUsers.map((user) => ({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      occupation: user.occupation,
+      location: user.location,
+      picturePath: user.picturePath,
+    }));
+
+    res.status(200).json(suggestedFriends);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+

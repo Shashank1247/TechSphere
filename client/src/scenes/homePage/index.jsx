@@ -4,7 +4,7 @@ import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
-import AdvertWidget from "scenes/widgets/AdvertWidget";
+import SuggestedFriendsWidget from "scenes/widgets/SuggestedFriendsWidget";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 
 const HomePage = () => {
@@ -44,7 +44,9 @@ const HomePage = () => {
            
             <Box />
             <FriendListWidget userId={_id} />
+            <SuggestedFriendsWidget userId={_id} />
           </Box>
+          
         )}
       </Box>
     </Box>
