@@ -64,7 +64,7 @@ const PORT = 3001 || 6002;
 
 app.use(cors(
   {
-    origin: ["http://localhost:3001"],
+    origin: ["https://tech-sphere-g0hg9yidp-shashanks-projects-7d47eddc.vercel.app/"],
     methods: ["POST","GET"],
     credentials: true
   }
