@@ -69,7 +69,7 @@ const ProductPage = () => {
             {product.productName}
           </Typography>
           <Typography variant="subtitle1" sx={{ color: theme.palette.text.secondary }}>
-            Product Price: {product.productPrice}
+            Product Price: ${product.productPrice}
           </Typography>
           <Typography variant="subtitle2" sx={{ color: theme.palette.text.secondary }}>
             Rating: {product.productRating}
@@ -113,7 +113,7 @@ const ProductPage = () => {
             }}
           >
             <Typography variant="h6" sx={{ color: theme.palette.text.primary, mb: 1 }}>
-              User Reviews
+              Review
             </Typography>
             <Typography sx={{ color: theme.palette.text.secondary }}>
               {product.productReview}

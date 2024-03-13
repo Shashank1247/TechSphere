@@ -56,7 +56,7 @@ const Navbar = () => {
             },
           }}
         >
-          Techsphere
+          TechSphere
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
