@@ -63,6 +63,14 @@ const PORT = 3001 || 6002;
 
 
 
+// CORS configuration
+const corsOptions = {
+  origin: 'https://65f38eb175b3294c9fb1814b--gleaming-semifreddo-e2c522.netlify.app',
+  optionsSuccessStatus: 200 // For legacy browser support
+};
+
+app.use(cors(corsOptions));
+
 
 app.get("/test",(req,res) => {
   res.json("hello");
