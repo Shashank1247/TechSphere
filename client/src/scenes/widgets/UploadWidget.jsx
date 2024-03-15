@@ -41,7 +41,7 @@ const UploadWidget = () => {
 
     formData.append("picturePath", values.picture.name);
 
-    const response = await fetch("http://localhost:3001/auth/upload", {
+    const response = await fetch("https://techsphere-493f.onrender.com/auth/upload", {
       method: "POST",
       body: formData,
     });

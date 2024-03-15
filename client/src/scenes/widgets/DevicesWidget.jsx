@@ -10,7 +10,7 @@ const DevicesWidget = ({ userId, isProfile = false }) => {
 
   const getUserUploads = async () => {
     const response = await fetch(
-      `http://localhost:3001/uploads/${userId}/uploads`,
+      `https://techsphere-493f.onrender.com/uploads/${userId}/uploads`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },

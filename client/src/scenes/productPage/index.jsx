@@ -14,7 +14,7 @@ const ProductPage = () => {
   useEffect(() => {
     const getDevice = async () => {
       const response = await fetch(
-        `http://localhost:3001/uploads/${productId}/device`,
+        `https://techsphere-493f.onrender.com/uploads/${productId}/device`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
@@ -61,7 +61,7 @@ const ProductPage = () => {
           }}
         >
           <img
-            src={`http://localhost:3001/assets/${product.picturePath}`}
+            src={`https://techsphere-493f.onrender.com/assets/${product.picturePath}`}
             alt={product.productName}
             style={{ width: '100%', borderRadius: '8px' }}
           />

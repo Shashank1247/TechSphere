@@ -11,7 +11,7 @@ const SuggestedFriendsWidget = ({ userId }) => {
 
   const getSuggestedFriends = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}/suggested-friends`, {
+      const response = await fetch(`https://techsphere-493f.onrender.com/users/${userId}/suggested-friends`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });

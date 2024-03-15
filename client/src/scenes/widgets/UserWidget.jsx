@@ -22,7 +22,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const isDeviceListPage = location.pathname === deviceListRoute;
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`https://techsphere-493f.onrender.com/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

@@ -34,7 +34,7 @@ const DeviceWidget = ({
       
       {picturePath && (
         <img
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={`https://techsphere-493f.onrender.com/assets/${picturePath}`}
           alt={productName}
           style={{ width: '100%', height: 'auto', borderRadius: '0.75rem', marginBottom: '1rem' }}
         />
